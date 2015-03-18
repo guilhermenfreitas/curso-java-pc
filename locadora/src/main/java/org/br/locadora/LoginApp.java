@@ -1,6 +1,10 @@
 package org.br.locadora;
 
+import javax.swing.JOptionPane;
+
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -10,25 +14,34 @@ import javafx.stage.Stage;
 
 public class LoginApp extends Application {
 
+	private AnchorPane pane;
+	private TextField txLogin;
+	private PasswordField txSenha;
+	private Button btEntrar, btSair;
+	private static Stage stage;
+
 	public LoginApp() {
 
 	}
 
-	@Override
-	public void start(Stage stage) throws Exception {
-		AnchorPane pane = new AnchorPane();
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	private void initComponents() {
+		pane = new AnchorPane();
 		pane.setPrefSize(400, 300);
 		pane.setStyle("-fx-background-color: linear-gradient( from 0% 0% to 100% 100%, blue 0%, white 100%);");
-		TextField txLogin = new TextField();
+		txLogin = new TextField();
 		txLogin.setPromptText("Digite aqui seu login");
-		PasswordField txSenha = new PasswordField();
+		txSenha = new PasswordField();
 		txSenha.setPromptText("Digite aqui sua senha");
-		Button btEntrar = new Button("Entrar");
-		Button btSair = new Button("Sair");
+		btEntrar = new Button("Entrar");
+		btSair = new Button("Sair");
 		pane.getChildren().addAll(txLogin, txSenha, btEntrar, btSair);
-		Scene scene = new Scene(pane);
-		stage.setScene(scene);
-		stage.show();
+	}
+
+	private void initLayout() {
 		txLogin.setLayoutX((pane.getWidth() - txLogin.getWidth()) / 2);
 		txLogin.setLayoutY(50);
 		txSenha.setLayoutX((pane.getWidth() - txSenha.getWidth()) / 2);
@@ -39,7 +52,59 @@ public class LoginApp extends Application {
 		btSair.setLayoutY(200);
 	}
 
-	public static void main(String[] args) {
-		launch(args);
+	@Override
+	public void start(Stage stage) throws Exception {
+		initComponents();
+		initListeners();
+
+		Scene scene = new Scene(pane);
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.setTitle("Login - GolFX");
+		stage.show();
+		initLayout();
+		LoginApp.stage = stage;
+	}
+
+	public static Stage getStage() {
+		return stage;
+	}
+
+	private void initListeners() {
+		btSair.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				fecharAplicacao();
+
+			}
+		});
+
+		btEntrar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				logar();
+			}
+		});
+
+	}
+
+	private void logar() {
+		if (txLogin.getText().equals("admin")
+				&& txSenha.getText().equals("a")) {
+			try {
+				new VitrineApp().start(new Stage());
+				LoginApp.getStage().close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Login e/ou senha inválidos",
+					"Erro", JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
+
+	private void fecharAplicacao() {
+		System.exit(0);
 	}
 }
