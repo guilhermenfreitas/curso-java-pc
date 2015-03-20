@@ -1,8 +1,14 @@
 package org.br.locadora;
 
+import java.awt.Panel;
+
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -38,13 +44,15 @@ public class ItemApp extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
-		pane = new AnchorPane();
+		initComponents();
+		initListeners();
 		pane.setPrefSize(600, 400);
-		stage = new Stage();
+		Scene scene = new Scene(pane);
+		stage.setScene(scene);
 		stage.setResizable(false);
-		stage.setTitle("Login - GolFX");
+		stage.setTitle("Vitrine - GolFX");
 		stage.show();
 		initLayout();
 		ItemApp.stage = stage;
@@ -64,15 +72,44 @@ public class ItemApp extends Application {
 	}
 
 	private void initComponents() {
-		imgItem = new ImageView();
-		lbDescricao = new Label();
-		lbPreco = new Label();
-		btAddCarrinho = new Button();
+		Image img = new Image(images[index]);
+		pane = new AnchorPane();
+		pane.setStyle("-fx-background-color: linear-gradient( from 0% 0% to 100% 100%, blue 0%, white 100%);");
+		imgItem = new ImageView(img);
+
+		imgItem.setLayoutX(0);
+		imgItem.setLayoutY(0);
+		imgItem.setFitHeight(150);
+		imgItem.setFitWidth(150);
+
+		lbDescricao = new Label(produto.getProduto());
+		lbPreco = new Label(produto.getPreco().toString());
+		btAddCarrinho = new Button("Adicionar ao carrinho");
+		pane.getChildren().addAll(imgItem, lbDescricao, lbPreco, btAddCarrinho);
 
 	}
-	
-	private void initLayout(){
-		
+
+	private void initLayout() {
+
+		lbDescricao.setLayoutX(400);
+		lbDescricao.setLayoutY(50);
+		lbPreco.setLayoutX(400);
+		lbPreco.setLayoutY(0);
+		btAddCarrinho.setLayoutX(300);
+		btAddCarrinho.setLayoutY(300);
 	}
 
+	private void initListeners() {
+		btAddCarrinho.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				VitrineApp.getCarrinho().addProdutos(produto);
+				try {
+					new CarrinhoApp().start(new Stage());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }

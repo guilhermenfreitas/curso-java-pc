@@ -40,7 +40,7 @@ public class VitrineApp extends Application {
 		Scene scene = new Scene(pane);
 		stage.setScene(scene);
 		stage.setResizable(false);
-		stage.setTitle("Login - GolFX");
+		stage.setTitle("Vitrine - GolFX");
 		stage.show();
 		initLayout();
 		VitrineApp.stage = stage;
@@ -49,6 +49,7 @@ public class VitrineApp extends Application {
 	private void initComponents() {
 		pane = new AnchorPane();
 		pane.setPrefSize(800, 600);
+		pane.setStyle("-fx-background-color: linear-gradient( from 0% 0% to 100% 100%, blue 0%, white 100%);");
 		txPesquisa = new TextField();
 		txPesquisa.setPromptText("Digite o item para pesquisa");
 		tbVitrine = new TableView<ItensProperty>();
@@ -63,7 +64,7 @@ public class VitrineApp extends Application {
 						"preco"));
 		tbVitrine.getColumns().addAll(columnProduto, columnPreco);
 		pane.getChildren().addAll(txPesquisa, tbVitrine);
-		carrinho = new Carrinho();
+		setCarrinho(new Carrinho());
 
 	}
 
@@ -155,9 +156,19 @@ public class VitrineApp extends Application {
 	private void initLayout() {
 
 		tbVitrine.setLayoutX((pane.getWidth() - tbVitrine.getWidth()) / 2);
-		tbVitrine.setLayoutY(60);
+		tbVitrine.setLayoutY(55);
 
 		txPesquisa.setLayoutX(tbVitrine.getLayoutX());
 		txPesquisa.setLayoutY(10);
 	}
+
+	public static Carrinho getCarrinho() {
+		return carrinho;
+	}
+
+	public static void setCarrinho(Carrinho carrinho) {
+		VitrineApp.carrinho = carrinho;
+	}
+
+
 }
